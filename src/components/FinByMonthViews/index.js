@@ -114,14 +114,7 @@ const FinByMonthViews = ({ data, config, deposits }) => {
         <div className="w-1/3 flex flex-wrap">
           <div className="w-full"><Custom.SimpleList data={incomeList} title="OUTRAS RECEITAS" />
           </div>
-          <div className="w-full"><Custom.Statistics data={totals} config={config} /></div>
-        </div>
-        <div className="w-full mt-8">
-          {deposits.length > 0 && <Custom.DepositTable 
-            data={deposits} 
-            title="DEPÓSITOS" 
-            divider 
-          />}
+          <div className="w-full"><Custom.Statistics data={totals} deposits={deposits} config={config} /></div>
         </div>
       </div>
     );

@@ -85,7 +85,7 @@ const SimpleList = ({data, title, negative}) => {
   );
 }
 
-const Statistics = ({title, data, config }) => {
+const Statistics = ({title, data, config, deposits }) => {
 
   const balancesQuery = useQuery(
     'balances', () => axios.get(process.env.REACT_APP_API_HOST + '?type=get-balances').then(res=>res.data), {staleTime: Infinity})
@@ -110,15 +110,20 @@ const Statistics = ({title, data, config }) => {
             )}</Table.Cell>
         </Table.Column>
       </Table>
-      {balances[0] && balances[0][2] > 0 && balances[0][2] > 0 &&<div className='w-full pl-2'>
-        <h3 className='m-0 p-0'>SALDOS <span>{balances[0] && moment(balances[0][4]).isValid() ? `(${moment(balances[0][4]).format('DD/MM/YY')})`: ""}</span></h3>
+      {balances[0] && balances[0][2] > 0 && balances[0][2] > 0 && <div className='w-full pl-2 mt-2'>
         <div className='flex flex-col'>
-          <div className='inline-flex justify-between'>
-            <b>Caixa</b>
+          {deposits.map(deposit => (
+            <div className='inline-flex justify-between'>
+              <b>Depósito <small className='font-thin'>{moment(deposit.data).format("DD/MM/YY")}</small></b>
+              <span>{deposit.valor.toFixed(2).replace(".", ",")}</span>
+            </div>
+          ))}
+          <div className='inline-flex justify-between mt-2'>
+            <b>Caixa <small className='font-thin'>{balances[0] && moment(balances[0][4]).isValid() ? `${moment(balances[0][4]).format('DD/MM/YY')}`: ""}</small></b>
             <span>{balances[0] ? balances[0][2].toFixed(2).replace(".",","): 0.00}</span>
           </div>
           <div className='inline-flex justify-between'>
-            <b>Banco</b>
+            <b>Banco <small className='font-thin'>{balances[0] && moment(balances[0][4]).isValid() ? `${moment(balances[0][4]).format('DD/MM/YY')}`: ""}</small></b>
             <span>{balances[0] ? balances[0][3].toFixed(2).replace(".",","): 0.00}</span>
           </div>
           <div className='inline-flex justify-between'>
@@ -131,45 +136,4 @@ const Statistics = ({title, data, config }) => {
   );
 }
 
-const DepositTable = ({data, title, divider}) => {
-
-  if(data.length > 0){
-    return (
-      <>
-        {divider && <div className="w-full"><Divider></Divider></div>}
-        <h4>{title}</h4>
-        <Table data={data}>
-          <Table.Column width={150} align="center" fixed>
-            <Table.HeaderCell>Data</Table.HeaderCell>
-            <Table.Cell>{rowData => (
-              moment(rowData.data).format('DD/MM/YYYY')
-            )}</Table.Cell>
-          </Table.Column>
-          <Table.Column width={150} align="center" fixed>
-            <Table.HeaderCell>Mês</Table.HeaderCell>
-            <Table.Cell dataKey="mes" />
-          </Table.Column>
-          <Table.Column width={150} align="center" fixed>
-            <Table.HeaderCell>Ano</Table.HeaderCell>
-            <Table.Cell dataKey="ano" />
-          </Table.Column>
-          <Table.Column width={150} align="center" fixed>
-            <Table.HeaderCell>Banco</Table.HeaderCell>
-            <Table.Cell dataKey="banco" />
-          </Table.Column>
-          <Table.Column width={150} align="center" fixed>
-            <Table.HeaderCell>Valor</Table.HeaderCell>
-            <Table.Cell>{rowData => (
-              rowData.valor.toFixed(2).replace(".",",")
-            )}</Table.Cell>
-          </Table.Column>
-        </Table>
-      </>
-    )
-  } else {
-    return (<></>)
-  }
-
-}
-
-export {ByDayTable, SimpleList, Statistics, DepositTable};
+export {ByDayTable, SimpleList, Statistics};
