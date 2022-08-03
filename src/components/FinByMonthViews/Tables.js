@@ -114,7 +114,7 @@ const Statistics = ({title, data, config, deposits }) => {
         <div className='flex flex-col'>
           {deposits.map(deposit => (
             <div className='inline-flex justify-between'>
-              <b>Depósito <small className='font-thin'>{moment(deposit.data).format("DD/MM/YY")}</small></b>
+              <b>Depósito <small className='font-thin'>{moment(deposits.data).isValid() && moment(deposit.data).format("DD/MM/YY")}</small></b>
               <span>{deposit.valor.toFixed(2).replace(".", ",")}</span>
             </div>
           ))}
