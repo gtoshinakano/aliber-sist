@@ -11,7 +11,7 @@ import { useQueryClient, useQuery } from 'react-query';
 const FinByMonthViews = ({ data, config, deposits }) => {
 
   const [loading, setLoading] = React.useState(false)
-
+  const { data: balances } = useQuery(['balances'], () => axios.get(process.env.REACT_APP_API_HOST + '?type=get-balances').then(res => res.data))
 
   if (config.view === "Tabela")
     return (
@@ -98,6 +98,8 @@ const FinByMonthViews = ({ data, config, deposits }) => {
       { descricao: `Resultado ${config.mes_ref}`, valor: incomeByDayTotal - expenseByDayTotal + incomeTotal - expenseTotal }
     ]
 
+    const notes = balances && balances.length > 0 ? balances.filter(f => f[0] === config.mes_ref && f[1] === parseInt(config.ano_ref)) : []
+
     return (
       <div className="text-black flex flex-wrap">
         <div className="w-full">
@@ -116,6 +118,10 @@ const FinByMonthViews = ({ data, config, deposits }) => {
           </div>
           <div className="w-full"><Custom.Statistics data={totals} deposits={deposits} config={config} /></div>
         </div>
+        {notes.length > 0 && notes[0][5] !== "" && <div className='w-full pt-6 px-3'>
+          <h4 className='font-semibold text-lg'>Nota</h4>
+          {notes[0][5]}
+        </div>}
       </div>
     );
   }
