@@ -7,7 +7,7 @@ import 'moment/locale/pt-br';
 import FinByMonthViews from './FinByMonthViews';
 
 const FinByMonth = () => {
-  const {isLoading, data} = useQuery(
+  const { isLoading, data } = useQuery(
     'all-finances', () => axios.get(process.env.REACT_APP_API_HOST + '?type=get-all-mov-fin-list').then(
       res => {
         let array = [...res.data]
@@ -18,29 +18,29 @@ const FinByMonth = () => {
           return ret
         })
       }
-    ), {staleTime: Infinity})
+    ), { staleTime: Infinity })
 
-    const { isLoading: depositIsLoading, data: deposits } = useQuery('deposits', () => axios.get(
-      process.env.REACT_APP_API_HOST + '?type=get-deposits').then(res => res.data)
-      , { staleTime: Infinity }
-    )
+  const { isLoading: depositIsLoading, data: deposits } = useQuery('deposits', () => axios.get(
+    process.env.REACT_APP_API_HOST + '?type=get-deposits').then(res => res.data)
+    , { staleTime: Infinity }
+  )
 
-    const [config, setConfig] = React.useState(_config);
+  const [config, setConfig] = React.useState(_config);
 
 
-    const changeConfigMes = (key) => setConfig({...config, mes_ref: key})
-    const changeConfigAno = (key) => setConfig({...config, ano_ref: key})
-    const changeConfigView = (checked) => setConfig({...config, view: checked ? "Tabela" : "Board"})
+  const changeConfigMes = (key) => setConfig({ ...config, mes_ref: key })
+  const changeConfigAno = (key) => setConfig({ ...config, ano_ref: key })
+  const changeConfigView = (checked) => setConfig({ ...config, view: checked ? "Tabela" : "Board" })
 
- 
 
-  if(isLoading || depositIsLoading) return <div className="fixed w-full h-full"> <Loader inverse center backdrop content="loading..." /> </div>
-  else if(data && deposits) {
-    const uniqueAnos = [...new Set(data.map(item => item.ano_ref))]; 
+
+  if (isLoading || depositIsLoading) return <div className="fixed w-full h-full"> <Loader inverse center backdrop content="loading..." /> </div>
+  else if (data && deposits) {
+    const uniqueAnos = [...new Set(data.map(item => item.ano_ref))];
     const filteredData = data.filter(item => item.ano_ref === config.ano_ref && item.mes_ref === config.mes_ref)
     const monthDeposits = deposits.filter(f => f[0] === config.mes_ref && f[1].toString() === config.ano_ref)
     const depositMatrix = [deposits[0] || [], ...monthDeposits]
-    const depositList = jsonify(depositMatrix) 
+    const depositList = jsonify(depositMatrix)
 
     return (
       <div className="flex flex-wrap">
@@ -57,7 +57,7 @@ const FinByMonth = () => {
           <AnoDropdown config={config} changeConfigAno={changeConfigAno} data={uniqueAnos} />
         </div>
         <div className="w-full">
-          <FinByMonthViews data={filteredData} deposits={depositList} config={config}  />
+          <FinByMonthViews data={filteredData} deposits={depositList} config={config} />
         </div>
       </div>
     );
@@ -74,7 +74,7 @@ const _config = {
   ano_ref: moment().format("YYYY"),
 }
 
-const MesDropdown = ({config, changeConfigMes}) => (
+const MesDropdown = ({ config, changeConfigMes }) => (
   <Dropdown title={config.mes_ref} activeKey={config.mes_ref} size="lg" noCaret>
     <Dropdown.Item onSelect={changeConfigMes} eventKey="Janeiro">Janeiro</Dropdown.Item>
     <Dropdown.Item onSelect={changeConfigMes} eventKey="Fevereiro">Fevereiro</Dropdown.Item>
@@ -91,7 +91,7 @@ const MesDropdown = ({config, changeConfigMes}) => (
   </Dropdown>
 )
 
-const AnoDropdown = ({config, changeConfigAno, data}) => (
+const AnoDropdown = ({ config, changeConfigAno, data }) => (
   <Dropdown title={config.ano_ref} activeKey={config.ano_ref} size="lg" noCaret>
     {data.map(item => (
       <Dropdown.Item onSelect={changeConfigAno} key={item} eventKey={item}>{item}</Dropdown.Item>
@@ -100,11 +100,11 @@ const AnoDropdown = ({config, changeConfigAno, data}) => (
 )
 
 
-function jsonify(arr){
+function jsonify(arr) {
   let ret = []
   const keys = arr[0]
   arr.forEach((val, i) => {
-    if(i !== 0) ret.push( objectify(val, keys) )
+    if (i !== 0) ret.push(objectify(val, keys))
   })
   return ret
 }

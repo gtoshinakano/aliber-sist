@@ -18,6 +18,7 @@ import axios from 'axios'
 import MovFinList from './MovFinList'
 import TempMovFinList from './TempMovFinList'
 import moment from 'moment';
+import { useQuery } from 'react-query'
 
 
 
@@ -92,6 +93,15 @@ const Movimentacao = (props) => {
     else if ((form.tipo === "Contribuição" || form.tipo === "Despesa") && form.dia_ref === "") return false
     else return true
   }
+
+  const { data: descricoes } = useQuery('descricoes', async () => {
+    try {
+      const req = await axios.get(process.env.REACT_APP_API_HOST + '?type=get-descricoes')
+      return req.data
+    } catch (e) {
+      return []
+    }
+  })
 
   return (
     <>
