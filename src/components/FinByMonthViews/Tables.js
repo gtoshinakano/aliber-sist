@@ -110,7 +110,7 @@ const Statistics = ({ title, data, config, deposits }) => {
           )}</Table.Cell>
         </Table.Column>
       </Table>
-      {balances[0] && balances[0][2] > 0 && balances[0][2] > 0 && <div className='w-full pl-2 mt-2'>
+      <div className='w-full pl-2 mt-2'>
         <div className='flex flex-col'>
           {deposits.map(deposit => (
             <div className='inline-flex justify-between' key={deposit}>
@@ -118,6 +118,10 @@ const Statistics = ({ title, data, config, deposits }) => {
               <span>{deposit.valor.toFixed(2).replace(".", ",")}</span>
             </div>
           ))}
+        </div>
+      </div>
+      {balances[0] && balances[0][2] > 0 && balances[0][2] > 0 && <div className='w-full pl-2 mt-2'>
+        <div className='flex flex-col'>
           <div className='inline-flex justify-between mt-2'>
             <b>Caixa <small className='font-thin'>{balances[0] && moment(balances[0][4]).isValid() ? `${moment(balances[0][4]).format('DD/MM/YY')}` : ""}</small></b>
             <span>{balances[0] && balances[0][2] ? balances[0][2].toFixed(2).replace(".", ",") : 0.00}</span>
